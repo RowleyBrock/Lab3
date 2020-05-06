@@ -126,16 +126,10 @@ df_msd <- function(df) {
   df_num <- df[ , map_lgl(df, is.numeric)]
   means <- map(df_num, mean_fn)
   sd <- map(df_num, sd)
-  as.data.frame(sd)
+  return(as.data.frame(c(means = means, sd = sd)))
 }
 
 df_msd(iris)
-
-df_msd <- function(df, ...) {
-    df_num <- df[ , map_lgl(df, is.numeric)]
-    mutate(means = map(df_num, mean_fn),
-           sd = map(df_num, sd))
-    as.data.frame()
-}
+df_msd(diamonds)
 
 ```
