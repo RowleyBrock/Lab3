@@ -63,8 +63,21 @@ mean(data, na.rm = TRUE)
 Write a function that takes two vectors of the same length and returns the total number of instances where the value is NA for both vectors. For example, given the following two vectors (see code). Test that the function works as expected on two new vectors (i.e., any two vectors that are not given).
 ```{r vector_function}
 
-c(1, NA, NA, 3, 3, 9, NA)
-c(NA, 3, NA, 4, NA, NA, NA)
+a <- c(1, NA, NA, 3, 3, 9, NA)
+b <- c(NA, 3, NA, 4, NA, NA, NA)
+
+sum(is.na(a) &
+is.na(b))
+
+na_match <- function(x, y) {
+  sum(is.na(a) &
+is.na(b))
+}
+
+na_match(a, b)
+
+# test with another vector
+
 
 # The function should return a value of 2, because the vectors are both NA at the third and seventh locations.
 ```
@@ -89,9 +102,40 @@ purrr::map_dbl(split(mtcars$cyl, mtcars$cyl), length) / length(mtcars$cyl)
 Write a function that takes a data frame as its input and returns a data frame with only the numeric columns.
 ```{r df_numeric}
 
+# returns a logical vector 
+map_lgl(iris, is.numeric)
+
+# use brackets  to subset 
+iris[ , map_lgl(iris, is.numeric)]
+
+# wrapping in function 
+df_numeric <- function(df) {
+  df[ , map_lgl(df, is.numeric)]
+}
+
+# checking 
+df_numeric(iris)
+df_numeric(diamonds)
+
 ```
 
 Write a function that uses the function you wrote in Question 5, and returns a data frame with the mean and standard deviation of each numeric column.
 ```{r df_msd}
+
+df_msd <- function(df) {
+  df_num <- df[ , map_lgl(df, is.numeric)]
+  means <- map(df_num, mean_fn)
+  sd <- map(df_num, sd)
+  as.data.frame(sd)
+}
+
+df_msd(iris)
+
+df_msd <- function(df, ...) {
+    df_num <- df[ , map_lgl(df, is.numeric)]
+    mutate(means = map(df_num, mean_fn),
+           sd = map(df_num, sd))
+    as.data.frame()
+}
 
 ```
