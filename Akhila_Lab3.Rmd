@@ -1,6 +1,6 @@
 ---
-title: "Rowley_Lab3"
-author: "Brock Rowley"
+title: "Lab3"
+author: "Akhila Nekkanti"
 date: "5/6/2020"
 output: html_document
 ---
@@ -11,15 +11,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Part A: Foundations
 Briefly name and describe the three fundamental components of a function.  
-Three components of a function:  
-body()  
-formals()  
-environment()  
+## Three components of a function:  
+1. body()  The statements that are executed by calling a particular function.
+
+2. formals() The arguments supplied to the function.
+
+3. environment()  The location of the function's variables - either a package or a global enviroment. 
 
 Describe three different ways functions can be stored/applied and an example of when you might want to use each version.
-1)  
-2)  
-3)  
+1)  list - Can loop through several functions for a particular vector.
+2)  object - bound to a name
+3)  anonymous function - function not bound to a name
 
 # Part B: Applied practice
 The mean is defined as:
@@ -28,46 +30,129 @@ The mean is defined as:
 Write a function to calculate the mean that removes missing data before conducting the calculation. You may not use base::mean or any similar function that conducts a mean calculation.
 ```{r mean_function}
 
+data <- c(1,4,6,NA,8,NA,10)
+data2 <- na.omit(data)
+
+
+sum(data2)/length(data2)
+mean(data, na.rm = TRUE)
+
+mean_fn <- function(x) {
+  y <- na.omit(x)
+  
+  (sum(y)/length(y))
+}
+
+
+
 ```
 
 Test your function to make sure it (a) provides the expected results, and (b) gives identical output to base::mean when na.rm = TRUE. Make sure that you test your data against a vector that has missing data.
 ```{r test_function}
 
-#base::mean, na.rm = TRUE
+mean_fn(data)
+mean(data, na.rm = TRUE)
+
 ```
 
 Write a function that takes two vectors of the same length and returns the total number of instances where the value is NA for both vectors. For example, given the following two vectors (see code). Test that the function works as expected on two new vectors (i.e., any two vectors that are not given).
 ```{r vector_function}
 
-c(1, NA, NA, 3, 3, 9, NA)
-c(NA, 3, NA, 4, NA, NA, NA)
+a <- c(1, NA, NA, 3, 3, 9, NA)
+b <- c(NA, 3, NA, 4, NA, NA, NA)
+
+sum(is.na(a) &
+is.na(b))
+
+#function
+na_match <- function(x, y) {
+ sum(is.na(x) &
+ is.na(y))
+}
+
+#test with a,b
+na_match(a,b)
+
+#test with new vectors
+data <- c(1,4,6,NA,8,NA,10,NA)
+data3 <- c(2,4,6,NA,7,NA,9,NA) 
+
+na_match(data,data3)
 
 # The function should return a value of 2, because the vectors are both NA at the third and seventh locations.
 ```
 
 Turn the following three lines of code into three different functions. Make sure to give them meaningful names. Test the functions to make sure they provide the expected output.
 ```{r count_missing}
+
 # Count number of missing elements in a vector
 sum(is.na(airquality$Ozone))
+
+count_missing <- function(x) {
+  sum(is.na(x))
+}
+
+count_missing(airquality$Ozone)
+
 ```
 
 ```{r prop_represent}
+
 # Proportional representation of each level (unique element) in a vector
 purrr::map_dbl(split(mtcars$cyl, mtcars$cyl), length) / length(mtcars$cyl)
+
+#function
+prop_represent <- function(x) {
+  purrr::map_dbl(split(x, x), length) / length(x)
+}
+
+#test
+prop_represent(mtcars$cyl)
+prop_represent((mtcars$disp))
+
 ```
 
 ```{r normalize}
 # normalize or z-score a vector so the mean is zero and sd is one
 (mtcars$mpg - mean(mtcars$mpg, na.rm = TRUE)) / 
   sd(mtcars$mpg, na.rm = TRUE)
+
+#function
+normalize <- function(x) {
+  (x - mean(x, na.rm = TRUE)) / 
+  sd(x, na.rm = TRUE)
+}
+
+#test
+normalize(mtcars$mpg)
+
 ```
 
 Write a function that takes a data frame as its input and returns a data frame with only the numeric columns.
 ```{r df_numeric}
 
+
+#map_lgl(iris, is.numeric)
+iris[ ,map_lgl(iris, is.numeric)]
+
+df_numeric <- function(df) {
+    df[ ,map_lgl(df, is.numeric)]
+}  
+
+#test
+df_numeric(iris)
+df_numeric(diamonds)
 ```
 
 Write a function that uses the function you wrote in Question 5, and returns a data frame with the mean and standard deviation of each numeric column.
 ```{r df_msd}
+
+
+df_msd <- list(
+  function(df) {
+    df[ ,map_lgl(df, is.numeric)]
+}  
+
+iris[ ,map_lgl(iris, is.numeric, mean)]
 
 ```
