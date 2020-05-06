@@ -7,24 +7,91 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Part A: Foundations
+Briefly name and describe the three fundamental components of a function.  
+Three components of a function:  
+body() - the statements that are executed inside the function. In other words, all of the code that builds the function. 
+formals() - the arguments for the function. These are defined inside the body.   
+environment() - defining the location of the function's variables. Important for scoping.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Describe three different ways functions can be stored/applied and an example of when you might want to use each version.
+1) Object - binding a function to a name 
+2) Anonymous function - not binding a function to a name
+3) List - applying multiple functions to a vector  
 
-```{r cars}
-summary(cars)
+# Part B: Applied practice
+The mean is defined as:
+∑ni=1xin where xi represents each element in a generic vector, x, ∑ represents the summation of these elements, and n represents the total number of elements in x. In other words, sum and divide by the number included.
+
+Write a function to calculate the mean that removes missing data before conducting the calculation. You may not use base::mean or any similar function that conducts a mean calculation.
+```{r mean_function}
+
+data <- c(1, 4, 6, NA, 8, NA, 10)
+data2 <- na.omit(data)
+
+sum(data2)/length(data2)
+
+mean(data, na.rm = TRUE)
+
+length(data)
+
+# first remove missing data
+# then calculate the mean
+
+mean_fn <- function(x) {
+  y <- na.omit(x)
+  sum(y)/length(y)
+}
+
+
 ```
 
-## Including Plots
+Test your function to make sure it (a) provides the expected results, and (b) gives identical output to base::mean when na.rm = TRUE. Make sure that you test your data against a vector that has missing data.
+```{r test_function}
 
-You can also embed plots, for example:
+mean_fn(data)
+mean(data, na.rm = TRUE)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+#base::mean, na.rm = TRUE
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Write a function that takes two vectors of the same length and returns the total number of instances where the value is NA for both vectors. For example, given the following two vectors (see code). Test that the function works as expected on two new vectors (i.e., any two vectors that are not given).
+```{r vector_function}
+
+c(1, NA, NA, 3, 3, 9, NA)
+c(NA, 3, NA, 4, NA, NA, NA)
+
+# The function should return a value of 2, because the vectors are both NA at the third and seventh locations.
+```
+
+Turn the following three lines of code into three different functions. Make sure to give them meaningful names. Test the functions to make sure they provide the expected output.
+```{r count_missing}
+# Count number of missing elements in a vector
+sum(is.na(airquality$Ozone))
+```
+
+```{r prop_represent}
+# Proportional representation of each level (unique element) in a vector
+purrr::map_dbl(split(mtcars$cyl, mtcars$cyl), length) / length(mtcars$cyl)
+```
+
+```{r normalize}
+# normalize or z-score a vector so the mean is zero and sd is one
+(mtcars$mpg - mean(mtcars$mpg, na.rm = TRUE)) / 
+  sd(mtcars$mpg, na.rm = TRUE)
+```
+
+Write a function that takes a data frame as its input and returns a data frame with only the numeric columns.
+```{r df_numeric}
+
+```
+
+Write a function that uses the function you wrote in Question 5, and returns a data frame with the mean and standard deviation of each numeric column.
+```{r df_msd}
+
+```
