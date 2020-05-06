@@ -12,9 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 # Part A: Foundations
 Briefly name and describe the three fundamental components of a function.  
 Three components of a function:  
-body()  
-formals()  
-environment()  
+body() The statements that are executed inside a function.  
+formals()  List of arguments which controls how you can call the function.  
+environment() “map” of the location of the function’s variables.  
 
 Describe three different ways functions can be stored/applied and an example of when you might want to use each version.
 1)  
