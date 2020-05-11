@@ -7,11 +7,14 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
 # Part A: Foundations
-Briefly name and describe the three fundamental components of a function.  
+Briefly name and describe the three fundamental components of a function. 
+
 ## Three components of a function:  
+
 1. body()  The statements that are executed by calling a particular function.
 
 2. formals() The arguments supplied to the function.
@@ -19,8 +22,11 @@ Briefly name and describe the three fundamental components of a function.
 3. environment()  The location of the function's variables - either a package or a global enviroment. 
 
 Describe three different ways functions can be stored/applied and an example of when you might want to use each version.
+
 1)  list - Can loop through several functions for a particular vector.
+
 2)  object - bound to a name
+
 3)  anonymous function - function not bound to a name
 
 # Part B: Applied practice
@@ -42,7 +48,6 @@ mean_fn <- function(x) {
   
   (sum(y)/length(y))
 }
-
 
 
 ```
@@ -131,10 +136,9 @@ normalize(mtcars$mpg)
 Write a function that takes a data frame as its input and returns a data frame with only the numeric columns.
 ```{r df_numeric}
 
-
-#map_lgl(iris, is.numeric)
 iris[ ,map_lgl(iris, is.numeric)]
 
+#function
 df_numeric <- function(df) {
     df[ ,map_lgl(df, is.numeric)]
 }  
@@ -147,12 +151,13 @@ df_numeric(diamonds)
 Write a function that uses the function you wrote in Question 5, and returns a data frame with the mean and standard deviation of each numeric column.
 ```{r df_msd}
 
+df_msd <- function(df) {
+  df_num <- df[ , map_lgl(df, is.numeric)]
+  means <- map(df_num, mean_fn)
+  sd <- map(df_num, sd)
+  return(as.data.frame(c(means = means, sd = sd)))
+}
 
-df_msd <- list(
-  function(df) {
-    df[ ,map_lgl(df, is.numeric)]
-}  
-
-iris[ ,map_lgl(iris, is.numeric, mean)]
-
+#test
+df_msd(iris)
 ```
