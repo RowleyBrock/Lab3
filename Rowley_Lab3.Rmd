@@ -17,7 +17,7 @@ body() - the statements that are executed inside the function. In other words, a
 formals() - the arguments for the function. These are defined inside the body.  
 environment() - defining the location of the function's variables. Important for scoping.  
 
-Describe three different ways functions can be stored/applied and an example of when you might want to use each version.
+Describe three different ways functions can be stored/applied and an example of when you might want to use each version.  
 1) Object - binding a function to a name.  
 2) Anonymous function - not binding a function to a name.  
 3) List - applying multiple functions to a vector.  
@@ -54,16 +54,16 @@ b <- c(NA, 3, NA, 4, NA, NA, NA)
 sum(is.na(a) &
 is.na(b))
 
-#function
+# Write a function
 na_match <- function(x, y) {
  sum(is.na(x) &
  is.na(y))
 }
 
-#test with a,b
+# Test with a,b
 na_match(a,b)
 
-#test with new vectors
+# Test new vectors
 data <- c(1,4,6,NA,8,NA,10,NA)
 data3 <- c(2,4,6,NA,7,NA,9,NA) 
 
@@ -88,41 +88,57 @@ count_missing(airquality$Ozone)
 # Proportional representation of each level (unique element) in a vector
 purrr::map_dbl(split(mtcars$cyl, mtcars$cyl), length) / length(mtcars$cyl)
 
-#function
+# Write a function
 prop_represent <- function(x) {
   purrr::map_dbl(split(x, x), length) / length(x)
 }
 
-#test
+# Test it
 prop_represent(mtcars$cyl)
 prop_represent((mtcars$disp))
 ```
 
 ```{r normalize}
-# normalize or z-score a vector so the mean is zero and sd is one
+# Normalize or z-score a vector so the mean is zero and sd is one
 (mtcars$mpg - mean(mtcars$mpg, na.rm = TRUE)) /
   sd(mtcars$mpg, na.rm = TRUE)
 
-#function
+# Write a function
 normalize <- function(x) {
   (x - mean(x, na.rm = TRUE)) /
   sd(x, na.rm = TRUE)
 }
-
-#test
+# Test it
 normalize(mtcars$mpg)
 ```
 
 Write a function that takes a data frame as its input and returns a data frame with only the numeric columns.
 ```{r df_numeric}
-#map_lgl(iris, is.numeric)
+# Return a logical vector
+map_lgl(iris, is.numeric)
+
+# Brackets to subset
 iris[ ,map_lgl(iris, is.numeric)]
 
+# Wrap it in a function
 df_numeric <- function(df) {
   df[ ,map_lgl(df, is.numeric)]
 }
 
-#test
+# Test it
 df_numeric(iris)
 df_numeric(diamonds)
+```
+
+Write a function that uses the function you wrote in Question 5, and returns a data frame with the mean and standard deviation of each numeric column.
+```{r df_msd}
+df_msd <- function(df) {
+  df_num <- df[ , map_lgl(df, is.numeric)]
+  means <- map(df_num, mean_fn)
+  sd <- map(df_num, sd)
+  return(as.data.frame(c(means = means, sd = sd)))
+}
+
+# Test it
+df_msd(iris)
 ```

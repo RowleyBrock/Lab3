@@ -373,36 +373,34 @@ summary {
 <h1>Part A: Foundations</h1>
 <p>Briefly name and describe the three fundamental components of a function.<br />
 Three components of a function:<br />
-body() - the statements that are executed inside the function. In other words, all of the code that builds the function. formals() - the arguments for the function. These are defined inside the body.<br />
+body() - the statements that are executed inside the function. In other words, all of the code that builds the function.<br />
+formals() - the arguments for the function. These are defined inside the body.<br />
 environment() - defining the location of the function’s variables. Important for scoping.</p>
-<p>Describe three different ways functions can be stored/applied and an example of when you might want to use each version. 1) Object - binding a function to a name 2) Anonymous function - not binding a function to a name 3) List - applying multiple functions to a vector</p>
+<p>Describe three different ways functions can be stored/applied and an example of when you might want to use each version.<br />
+1) Object - binding a function to a name.<br />
+2) Anonymous function - not binding a function to a name.<br />
+3) List - applying multiple functions to a vector.</p>
 </div>
 <div id="part-b-applied-practice" class="section level1">
 <h1>Part B: Applied practice</h1>
 <p>The mean is defined as: ∑ni=1xin where xi represents each element in a generic vector, x, ∑ represents the summation of these elements, and n represents the total number of elements in x. In other words, sum and divide by the number included.</p>
 <p>Write a function to calculate the mean that removes missing data before conducting the calculation. You may not use base::mean or any similar function that conducts a mean calculation.</p>
-<pre class="r"><code>data &lt;- c(1, 4, 6, NA, 8, NA, 10)
+<pre class="r"><code>data &lt;- c(1,4,6,NA,8,NA,10)
 data2 &lt;- na.omit(data)
 
 sum(data2)/length(data2)</code></pre>
 <pre><code>## [1] 5.8</code></pre>
 <pre class="r"><code>mean(data, na.rm = TRUE)</code></pre>
 <pre><code>## [1] 5.8</code></pre>
-<pre class="r"><code>length(data)</code></pre>
-<pre><code>## [1] 7</code></pre>
-<pre class="r"><code># first remove missing data
-# then calculate the mean
-
-mean_fn &lt;- function(x) {
+<pre class="r"><code>mean_fn &lt;- function(x) {
   y &lt;- na.omit(x)
-  sum(y)/length(y)
+  (sum(y)/length(y))
 }</code></pre>
 <p>Test your function to make sure it (a) provides the expected results, and (b) gives identical output to base::mean when na.rm = TRUE. Make sure that you test your data against a vector that has missing data.</p>
 <pre class="r"><code>mean_fn(data)</code></pre>
 <pre><code>## [1] 5.8</code></pre>
 <pre class="r"><code>mean(data, na.rm = TRUE)</code></pre>
 <pre><code>## [1] 5.8</code></pre>
-<pre class="r"><code>#base::mean, na.rm = TRUE</code></pre>
 <p>Write a function that takes two vectors of the same length and returns the total number of instances where the value is NA for both vectors. For example, given the following two vectors (see code). Test that the function works as expected on two new vectors (i.e., any two vectors that are not given).</p>
 <pre class="r"><code>a &lt;- c(1, NA, NA, 3, 3, 9, NA)
 b &lt;- c(NA, 3, NA, 4, NA, NA, NA)
@@ -410,27 +408,54 @@ b &lt;- c(NA, 3, NA, 4, NA, NA, NA)
 sum(is.na(a) &amp;
 is.na(b))</code></pre>
 <pre><code>## [1] 2</code></pre>
-<pre class="r"><code>na_match &lt;- function(x, y) {
-  sum(is.na(a) &amp;
-is.na(b))
+<pre class="r"><code># Write a function
+na_match &lt;- function(x, y) {
+ sum(is.na(x) &amp;
+ is.na(y))
 }
 
-na_match(a, b)</code></pre>
+# Test with a,b
+na_match(a,b)</code></pre>
 <pre><code>## [1] 2</code></pre>
-<pre class="r"><code># test with another vector
+<pre class="r"><code># Test new vectors
+data &lt;- c(1,4,6,NA,8,NA,10,NA)
+data3 &lt;- c(2,4,6,NA,7,NA,9,NA) 
 
-
-# The function should return a value of 2, because the vectors are both NA at the third and seventh locations.</code></pre>
+na_match(data,data3)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># The function should return a value of 2, because the vectors are both NA at the third and seventh locations.</code></pre>
 <p>Turn the following three lines of code into three different functions. Make sure to give them meaningful names. Test the functions to make sure they provide the expected output.</p>
 <pre class="r"><code># Count number of missing elements in a vector
 sum(is.na(airquality$Ozone))</code></pre>
+<pre><code>## [1] 37</code></pre>
+<pre class="r"><code>count_missing &lt;- function(x) {
+  sum(is.na(x))
+}
+
+count_missing(airquality$Ozone)</code></pre>
 <pre><code>## [1] 37</code></pre>
 <pre class="r"><code># Proportional representation of each level (unique element) in a vector
 purrr::map_dbl(split(mtcars$cyl, mtcars$cyl), length) / length(mtcars$cyl)</code></pre>
 <pre><code>##       4       6       8 
 ## 0.34375 0.21875 0.43750</code></pre>
-<pre class="r"><code># normalize or z-score a vector so the mean is zero and sd is one
-(mtcars$mpg - mean(mtcars$mpg, na.rm = TRUE)) / 
+<pre class="r"><code># Write a function
+prop_represent &lt;- function(x) {
+  purrr::map_dbl(split(x, x), length) / length(x)
+}
+
+# Test it
+prop_represent(mtcars$cyl)</code></pre>
+<pre><code>##       4       6       8 
+## 0.34375 0.21875 0.43750</code></pre>
+<pre class="r"><code>prop_represent((mtcars$disp))</code></pre>
+<pre><code>##    71.1    75.7    78.7      79    95.1     108   120.1   120.3     121   140.8 
+## 0.03125 0.03125 0.03125 0.03125 0.03125 0.03125 0.03125 0.03125 0.03125 0.03125 
+##     145   146.7     160   167.6     225     258   275.8     301     304     318 
+## 0.03125 0.03125 0.06250 0.06250 0.03125 0.03125 0.09375 0.03125 0.03125 0.03125 
+##     350     351     360     400     440     460     472 
+## 0.03125 0.03125 0.06250 0.03125 0.03125 0.03125 0.03125</code></pre>
+<pre class="r"><code># Normalize or z-score a vector so the mean is zero and sd is one
+(mtcars$mpg - mean(mtcars$mpg, na.rm = TRUE)) /
   sd(mtcars$mpg, na.rm = TRUE)</code></pre>
 <pre><code>##  [1]  0.15088482  0.15088482  0.44954345  0.21725341 -0.23073453 -0.33028740
 ##  [7] -0.96078893  0.71501778  0.44954345 -0.14777380 -0.38006384 -0.61235388
@@ -438,13 +463,26 @@ purrr::map_dbl(split(mtcars$cyl, mtcars$cyl), length) / length(mtcars$cyl)</code
 ## [19]  1.71054652  2.29127162  0.23384555 -0.76168319 -0.81145962 -1.12671039
 ## [25] -0.14777380  1.19619000  0.98049211  1.71054652 -0.71190675 -0.06481307
 ## [31] -0.84464392  0.21725341</code></pre>
+<pre class="r"><code># Write a function
+normalize &lt;- function(x) {
+  (x - mean(x, na.rm = TRUE)) /
+  sd(x, na.rm = TRUE)
+}
+# Test it
+normalize(mtcars$mpg)</code></pre>
+<pre><code>##  [1]  0.15088482  0.15088482  0.44954345  0.21725341 -0.23073453 -0.33028740
+##  [7] -0.96078893  0.71501778  0.44954345 -0.14777380 -0.38006384 -0.61235388
+## [13] -0.46302456 -0.81145962 -1.60788262 -1.60788262 -0.89442035  2.04238943
+## [19]  1.71054652  2.29127162  0.23384555 -0.76168319 -0.81145962 -1.12671039
+## [25] -0.14777380  1.19619000  0.98049211  1.71054652 -0.71190675 -0.06481307
+## [31] -0.84464392  0.21725341</code></pre>
 <p>Write a function that takes a data frame as its input and returns a data frame with only the numeric columns.</p>
-<pre class="r"><code># returns a logical vector 
+<pre class="r"><code># Return a logical vector
 map_lgl(iris, is.numeric)</code></pre>
 <pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
 ##         TRUE         TRUE         TRUE         TRUE        FALSE</code></pre>
-<pre class="r"><code># use brackets  to subset 
-iris[ , map_lgl(iris, is.numeric)]</code></pre>
+<pre class="r"><code># Brackets to subset
+iris[ ,map_lgl(iris, is.numeric)]</code></pre>
 <pre><code>##     Sepal.Length Sepal.Width Petal.Length Petal.Width
 ## 1            5.1         3.5          1.4         0.2
 ## 2            4.9         3.0          1.4         0.2
@@ -596,12 +634,12 @@ iris[ , map_lgl(iris, is.numeric)]</code></pre>
 ## 148          6.5         3.0          5.2         2.0
 ## 149          6.2         3.4          5.4         2.3
 ## 150          5.9         3.0          5.1         1.8</code></pre>
-<pre class="r"><code># wrapping in function 
+<pre class="r"><code># Wrap it in a function
 df_numeric &lt;- function(df) {
-  df[ , map_lgl(df, is.numeric)]
+  df[ ,map_lgl(df, is.numeric)]
 }
 
-# checking 
+# Test it
 df_numeric(iris)</code></pre>
 <pre><code>##     Sepal.Length Sepal.Width Petal.Length Petal.Width
 ## 1            5.1         3.5          1.4         0.2
@@ -777,16 +815,12 @@ df_numeric(iris)</code></pre>
   return(as.data.frame(c(means = means, sd = sd)))
 }
 
+# Test it
 df_msd(iris)</code></pre>
 <pre><code>##   means.Sepal.Length means.Sepal.Width means.Petal.Length means.Petal.Width
 ## 1           5.843333          3.057333              3.758          1.199333
 ##   sd.Sepal.Length sd.Sepal.Width sd.Petal.Length sd.Petal.Width
 ## 1       0.8280661      0.4358663        1.765298      0.7622377</code></pre>
-<pre class="r"><code>df_msd(diamonds)</code></pre>
-<pre><code>##   means.carat means.depth means.table means.price  means.x  means.y  means.z
-## 1   0.7979397     61.7494    57.45718      3932.8 5.731157 5.734526 3.538734
-##    sd.carat sd.depth sd.table sd.price     sd.x     sd.y      sd.z
-## 1 0.4740112 1.432621 2.234491  3989.44 1.121761 1.142135 0.7056988</code></pre>
 </div>
 
 
